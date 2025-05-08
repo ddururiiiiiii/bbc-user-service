@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * - 각 예외 상황에 맞는 HTTP 상태코드 및 응답 구조 반환
  * - ApiResponse.fail(...) 구조 사용
  */
-//@RestControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailNotVerifiedException.class)
@@ -72,11 +72,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleAllException(HttpServletRequest request, Exception ex) {
+    public ResponseEntity<ApiResponse<?>> handleAllException(HttpServletRequest request, Exception ex) throws Exception {
         String uri = request.getRequestURI();
-        // Swagger 관련 요청은 예외처리하지 않고 원래 방식으로 던짐
+
+        // Swagger 관련 요청은 글로벌 예외 핸들러에서 제외 (스프링 기본 처리로 넘김)
         if (uri.contains("/v3/api-docs") || uri.contains("/swagger-ui")) {
-            return null;  // Swagger 요청은 글로벌 예외 핸들러에서 처리하지 않음
+            throw ex;  // 이게 핵심! 그냥 다시 던져야 해
         }
 
         ex.printStackTrace(); // 운영환경에서는 로거로 변경
