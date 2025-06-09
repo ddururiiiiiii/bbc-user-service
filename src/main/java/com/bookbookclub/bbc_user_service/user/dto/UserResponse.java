@@ -21,7 +21,6 @@ public class UserResponse {
     private String profileImageUrl;
 
     public static UserResponse from(User user) {
-        // User 엔티티 → 응답 DTO로 변환
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())

@@ -1,4 +1,4 @@
-package com.bookbookclub.bbc_user_service.user.domain;
+package com.bookbookclub.bbc_user_service.emailverification.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

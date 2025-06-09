@@ -78,7 +78,14 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid UserLoginRequest request) {
         UserResponse user = userService.login(request);
-        String accessToken = jwtUtil.createToken(user.getEmail());
+        // AccessToken 생성 시 사용자 정보 모두 포함
+        String accessToken = jwtUtil.createToken(
+                user.getId(),
+                user.getEmail(),
+                user.getNickname(),
+                user.getProfileImageUrl(),
+                user.getRole()
+        );
         String refreshToken = jwtUtil.createRefreshToken();
 
         // Redis에 RefreshToken 저장
@@ -124,7 +131,13 @@ public class UserController {
 
         User user = userService.findById(request.getUserId());
 
-        String newAccessToken = jwtUtil.createToken(user.getEmail());
+        String newAccessToken = jwtUtil.createToken(
+                user.getId(),
+                user.getEmail(),
+                user.getNickname(),
+                user.getProfileImageUrl(),
+                user.getRole().name()
+        );
         String newRefreshToken = jwtUtil.createRefreshToken();
 
         refreshTokenService.save(user.getId(), newRefreshToken, REFRESH_EXPIRATION_DAYS, TimeUnit.DAYS);

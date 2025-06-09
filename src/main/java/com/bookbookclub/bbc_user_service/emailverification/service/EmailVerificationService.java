@@ -1,10 +1,10 @@
- package com.bookbookclub.bbc_user_service.user.service;
+package com.bookbookclub.bbc_user_service.emailverification.service;
 
 
-import com.bookbookclub.bbc_user_service.user.domain.EmailVerification;
-import com.bookbookclub.bbc_user_service.user.exception.EmailVerificationLimitExceededException;
+import com.bookbookclub.bbc_user_service.emailverification.entity.EmailVerification;
+import com.bookbookclub.bbc_user_service.emailverification.exception.EmailVerificationLimitExceededException;
+import com.bookbookclub.bbc_user_service.emailverification.repository.EmailVerificationRepository;
 import com.bookbookclub.bbc_user_service.user.exception.InvalidTokenException;
-import com.bookbookclub.bbc_user_service.user.repository.EmailVerificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -43,7 +43,7 @@ public class EmailVerificationService {
 
         redisTemplate.opsForValue().set(redisKey, email, 10, TimeUnit.MINUTES);
 
-        String link = "http://localhost:8080/api/email/verify?token=" + token;
+        String link = "http://localhost:8081/api/email/verify?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);

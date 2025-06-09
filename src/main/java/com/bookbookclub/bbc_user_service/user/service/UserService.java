@@ -1,10 +1,9 @@
 package com.bookbookclub.bbc_user_service.user.service;
 
 
-import com.bookbookclub.bbc_user_service.user.dto.UserLoginRequest;
-import com.bookbookclub.bbc_user_service.user.dto.UserResponse;
-import com.bookbookclub.bbc_user_service.user.dto.UserSignupRequest;
-import com.bookbookclub.bbc_user_service.user.dto.UserUpdateRequest;
+import com.bookbookclub.bbc_user_service.emailverification.exception.EmailNotVerifiedException;
+import com.bookbookclub.bbc_user_service.emailverification.service.EmailVerificationService;
+import com.bookbookclub.bbc_user_service.user.dto.*;
 import com.bookbookclub.bbc_user_service.user.enums.UserStatus;
 import com.bookbookclub.bbc_user_service.user.exception.*;
 import com.bookbookclub.bbc_user_service.user.policy.UserPolicy;
@@ -17,7 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 사용자 관련 비즈니스 로직을 처리하는 서비스
@@ -184,5 +186,22 @@ public class UserService {
 
         // 기본 이미지로 되돌림
         user.setProfileImageUrl(defaultProfileImageUrl);
+    }
+
+    public UserSummaryResponse getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        return UserSummaryResponse.from(user);
+    }
+
+
+    /**
+     * 여러 유저 ID로 사용자 정보 조회
+     */
+    public List<UserSummaryResponse> getUsersByIds(List<Long> userIds) {
+        List<User> users = userRepository.findAllById(userIds);
+        return users.stream()
+                .map(UserSummaryResponse::from)
+                .collect(Collectors.toList());
     }
 }

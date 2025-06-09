@@ -1,4 +1,5 @@
-package com.bookbookclub.bbc_user_service.user.exception;
+package com.bookbookclub.bbc_user_service.emailverification.exception;
+
 
 import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;

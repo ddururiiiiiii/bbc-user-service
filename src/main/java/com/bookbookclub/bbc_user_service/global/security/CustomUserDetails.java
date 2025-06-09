@@ -77,4 +77,12 @@ public class CustomUserDetails implements UserDetails , OAuth2User {
     public String getEmail() {
         return user.getEmail();
     }
+
+    public String getProfileImageUrl() {
+        return user.getProfileImageUrl();
+    }
+
+    public String getRole() {
+        return user.getRole().name();
+    }
 }

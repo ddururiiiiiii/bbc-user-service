@@ -1,6 +1,6 @@
-package com.bookbookclub.bbc_user_service.user.repository;
+package com.bookbookclub.bbc_user_service.emailverification.repository;
 
-import com.bookbookclub.bbc_user_service.user.domain.EmailVerification;
+import com.bookbookclub.bbc_user_service.emailverification.entity.EmailVerification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,6 +1,9 @@
 package com.bookbookclub.bbc_user_service.global.exception;
 
 
+import com.bookbookclub.bbc_user_service.emailverification.exception.EmailNotVerifiedException;
+import com.bookbookclub.bbc_user_service.emailverification.exception.EmailVerificationLimitExceededException;
+import com.bookbookclub.bbc_user_service.follow.exception.FollowNotFoundException;
 import com.bookbookclub.bbc_user_service.global.common.ApiResponse;
 import com.bookbookclub.bbc_user_service.user.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,14 +74,14 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.fail(e.getErrorCode()));
     }
 
+    @ExceptionHandler(FollowNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFollowNotFound(FollowNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.fail(e.getErrorCode()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleAllException(HttpServletRequest request, Exception ex) throws Exception {
-        String uri = request.getRequestURI();
-
-        // Swagger 관련 요청은 글로벌 예외 핸들러에서 제외 (스프링 기본 처리로 넘김)
-        if (uri.contains("/v3/api-docs") || uri.contains("/swagger-ui")) {
-            throw ex;  // 이게 핵심! 그냥 다시 던져야 해
-        }
 
         ex.printStackTrace(); // 운영환경에서는 로거로 변경
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
