@@ -5,11 +5,11 @@ import com.bookbookclub.bbc_user_service.user.domain.User;
 import com.bookbookclub.bbc_user_service.user.service.UserService;
 import com.bookbookclub.bbc_user_service.user.dto.*;
 
-import com.bookbookclub.bbc_user_service.global.common.ApiResponse;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtBlacklistService;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtRefreshTokenService;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtUtil;
 import com.bookbookclub.bbc_user_service.global.security.CustomUserDetails;
+import com.bookbookclub.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

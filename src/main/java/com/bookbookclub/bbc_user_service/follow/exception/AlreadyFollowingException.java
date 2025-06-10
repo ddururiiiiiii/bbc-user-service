@@ -1,14 +1,15 @@
 package com.bookbookclub.bbc_user_service.follow.exception;
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
+import com.bookbookclub.bbc_user_service.follow.exception.FollowErrorCode;
+
 import lombok.Getter;
 
 @Getter
 public class AlreadyFollowingException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final FollowErrorCode errorCode;
 
     public AlreadyFollowingException() {
-        super(ErrorCode.ALREADY_FOLLOWING.getMessage());
-        this.errorCode = ErrorCode.ALREADY_FOLLOWING;
+        super(FollowErrorCode.FOLLOW_NOT_FOUND.getMessage());
+        this.errorCode = FollowErrorCode.FOLLOW_NOT_FOUND;
     }
 }

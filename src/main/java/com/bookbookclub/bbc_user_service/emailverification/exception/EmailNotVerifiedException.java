@@ -1,7 +1,6 @@
 package com.bookbookclub.bbc_user_service.emailverification.exception;
 
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -10,10 +9,10 @@ import lombok.Getter;
  */
 @Getter
 public class EmailNotVerifiedException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final EmailVerificationErrorCode errorCode;
 
     public EmailNotVerifiedException() {
-        super(ErrorCode.EMAIL_NOT_VERIFIED.getMessage());
-        this.errorCode = ErrorCode.EMAIL_NOT_VERIFIED;
+        super(EmailVerificationErrorCode.EMAIL_NOT_VERIFIED.getMessage());
+        this.errorCode = EmailVerificationErrorCode.EMAIL_NOT_VERIFIED;
     }
 }

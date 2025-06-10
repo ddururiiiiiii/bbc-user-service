@@ -2,7 +2,7 @@ package com.bookbookclub.bbc_user_service.emailverification.controller;
 
 
 import com.bookbookclub.bbc_user_service.emailverification.service.EmailVerificationService;
-import com.bookbookclub.bbc_user_service.global.common.ApiResponse;
+import com.bookbookclub.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

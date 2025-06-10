@@ -1,6 +1,5 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -8,10 +7,10 @@ import lombok.Getter;
  */
 @Getter
 public class UserNotFoundException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final UserErrorCode errorCode;
 
     public UserNotFoundException() {
-        super(ErrorCode.USER_NOT_FOUND.getMessage());
-        this.errorCode = ErrorCode.USER_NOT_FOUND;
+        super(UserErrorCode.USER_NOT_FOUND.getMessage());
+        this.errorCode = UserErrorCode.USER_NOT_FOUND;
     }
 }

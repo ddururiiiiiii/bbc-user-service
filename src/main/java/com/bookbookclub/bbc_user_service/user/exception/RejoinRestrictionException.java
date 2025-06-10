@@ -1,6 +1,5 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -8,10 +7,10 @@ import lombok.Getter;
  */
 @Getter
 public class RejoinRestrictionException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final UserErrorCode errorCode;
 
     public RejoinRestrictionException() {
-        super(ErrorCode.REJOIN_RESTRICTED.getMessage());
-        this.errorCode = ErrorCode.REJOIN_RESTRICTED;
+        super(UserErrorCode.REJOIN_NOT_ALLOWED.getMessage());
+        this.errorCode = UserErrorCode.REJOIN_NOT_ALLOWED;
     }
 }

@@ -1,7 +1,6 @@
 package com.bookbookclub.bbc_user_service.emailverification.exception;
 
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -10,10 +9,10 @@ import lombok.Getter;
  */
 @Getter
 public class EmailVerificationLimitExceededException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final EmailVerificationErrorCode errorCode;
 
     public EmailVerificationLimitExceededException() {
-        super(ErrorCode.EMAIL_VERIFICATION_TOO_MANY_ATTEMPTS.getMessage());
-        this.errorCode = ErrorCode.EMAIL_VERIFICATION_TOO_MANY_ATTEMPTS;
+        super(EmailVerificationErrorCode.EMAIL_VERIFICATION_TOO_MANY_ATTEMPTS.getMessage());
+        this.errorCode = EmailVerificationErrorCode.EMAIL_VERIFICATION_TOO_MANY_ATTEMPTS;
     }
 }

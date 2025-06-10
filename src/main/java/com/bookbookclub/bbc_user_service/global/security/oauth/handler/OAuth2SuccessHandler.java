@@ -1,6 +1,5 @@
 package com.bookbookclub.bbc_user_service.global.security.oauth.handler;
 
-import com.bookbookclub.bbc_user_service.global.common.ApiResponse;
 import com.bookbookclub.bbc_user_service.global.common.TokenResponse;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtRefreshTokenService;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtUtil;

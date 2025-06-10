@@ -1,7 +1,6 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -9,10 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public class InvalidTokenException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final UserErrorCode errorCode;
 
     public InvalidTokenException() {
-        super(ErrorCode.INVALID_EMAIL_VERIFICATION_TOKEN.getMessage());
-        this.errorCode = ErrorCode.INVALID_EMAIL_VERIFICATION_TOKEN;
+        super(UserErrorCode.TOKEN_INVALID.getMessage());
+        this.errorCode = UserErrorCode.TOKEN_INVALID;
     }
 }

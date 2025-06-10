@@ -8,9 +8,9 @@ import com.bookbookclub.bbc_user_service.follow.exception.AlreadyFollowingExcept
 import com.bookbookclub.bbc_user_service.follow.exception.FollowNotFoundException;
 import com.bookbookclub.bbc_user_service.follow.repository.FollowRepository;
 import com.bookbookclub.bbc_user_service.user.domain.User;
-import com.bookbookclub.bbc_user_service.user.dto.UserSummaryResponse;
 import com.bookbookclub.bbc_user_service.user.exception.UserNotFoundException;
 import com.bookbookclub.bbc_user_service.user.repository.UserRepository;
+import com.bookbookclub.common.dto.UserSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +67,13 @@ public class FollowService {
     public List<FollowResponse> getFollowers(Long userId) {
         User user = findUserById(userId);
         return followRepository.findAllByFollowing(user).stream()
-                .map(f -> new FollowResponse(f.getId(), UserSummaryResponse.from(f.getFollower())))
+                .map(f -> new FollowResponse(
+                        f.getId(),
+                        UserSummaryResponse.of(
+                                f.getFollower().getId(),
+                                f.getFollower().getNickname(),
+                                f.getFollower().getProfileImageUrl()
+                        )))
                 .toList();
     }
 
@@ -77,7 +83,13 @@ public class FollowService {
     public List<FollowResponse> getFollowings(Long userId) {
         User user = findUserById(userId);
         return followRepository.findAllByFollower(user).stream()
-                .map(f -> new FollowResponse(f.getId(), UserSummaryResponse.from(f.getFollowing())))
+                .map(f -> new FollowResponse(
+                        f.getId(),
+                        UserSummaryResponse.of(
+                                f.getFollowing().getId(),
+                                f.getFollowing().getNickname(),
+                                f.getFollowing().getProfileImageUrl()
+                        )))
                 .toList();
     }
 

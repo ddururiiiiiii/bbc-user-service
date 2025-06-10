@@ -1,7 +1,7 @@
 package com.bookbookclub.bbc_user_service.user.controller.internal;
 
-import com.bookbookclub.bbc_user_service.user.dto.UserSummaryResponse;
 import com.bookbookclub.bbc_user_service.user.service.UserService;
+import com.bookbookclub.common.dto.UserSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

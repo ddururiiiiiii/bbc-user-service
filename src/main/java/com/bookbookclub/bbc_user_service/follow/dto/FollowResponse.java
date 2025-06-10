@@ -1,7 +1,7 @@
 package com.bookbookclub.bbc_user_service.follow.dto;
 
 
-import com.bookbookclub.bbc_user_service.user.dto.UserSummaryResponse;
+import com.bookbookclub.common.dto.UserSummaryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

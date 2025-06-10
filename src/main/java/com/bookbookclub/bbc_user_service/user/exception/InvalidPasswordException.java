@@ -1,6 +1,5 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -8,10 +7,10 @@ import lombok.Getter;
  */
 @Getter
 public class InvalidPasswordException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final UserErrorCode errorCode;
 
     public InvalidPasswordException() {
-        super(ErrorCode.INVALID_PASSWORD.getMessage());
-        this.errorCode = ErrorCode.INVALID_PASSWORD;
+        super(UserErrorCode.PASSWORD_INVALID.getMessage());
+        this.errorCode = UserErrorCode.PASSWORD_INVALID;
     }
 }

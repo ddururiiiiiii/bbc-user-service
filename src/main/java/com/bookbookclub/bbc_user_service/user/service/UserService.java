@@ -10,6 +10,7 @@ import com.bookbookclub.bbc_user_service.user.policy.UserPolicy;
 import com.bookbookclub.bbc_user_service.user.repository.UserRepository;
 import com.bookbookclub.bbc_user_service.user.domain.User;
 
+import com.bookbookclub.common.dto.UserSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -191,7 +192,7 @@ public class UserService {
     public UserSummaryResponse getUserById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
-        return UserSummaryResponse.from(user);
+        return UserSummaryResponse.of(user.getId(), user.getNickname(), user.getProfileImageUrl());
     }
 
 
@@ -201,7 +202,7 @@ public class UserService {
     public List<UserSummaryResponse> getUsersByIds(List<Long> userIds) {
         List<User> users = userRepository.findAllById(userIds);
         return users.stream()
-                .map(UserSummaryResponse::from)
+                .map(user -> UserSummaryResponse.of(user.getId(), user.getNickname(), user.getProfileImageUrl()))
                 .collect(Collectors.toList());
     }
 }

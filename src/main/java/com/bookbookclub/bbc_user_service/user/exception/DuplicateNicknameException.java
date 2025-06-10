@@ -1,6 +1,5 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -9,10 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public class DuplicateNicknameException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final UserErrorCode errorCode;
 
     public DuplicateNicknameException() {
-        super(ErrorCode.DUPLICATE_NICKNAME.getMessage());
-        this.errorCode = ErrorCode.DUPLICATE_NICKNAME;
+        super(UserErrorCode.NICKNAME_DUPLICATED.getMessage());
+        this.errorCode = UserErrorCode.NICKNAME_DUPLICATED;
     }
 }

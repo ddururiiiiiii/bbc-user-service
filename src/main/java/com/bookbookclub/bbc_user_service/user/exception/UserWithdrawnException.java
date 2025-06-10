@@ -1,7 +1,6 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -9,10 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public class UserWithdrawnException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final UserErrorCode errorCode;
 
     public UserWithdrawnException() {
-        super(ErrorCode.USER_WITHDRAWN.getMessage());
-        this.errorCode = ErrorCode.USER_WITHDRAWN;
+        super(UserErrorCode.USER_ALREADY_WITHDRAWN.getMessage());
+        this.errorCode = UserErrorCode.USER_ALREADY_WITHDRAWN;
     }
 }

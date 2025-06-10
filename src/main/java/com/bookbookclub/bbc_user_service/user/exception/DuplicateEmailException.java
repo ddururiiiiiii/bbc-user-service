@@ -1,6 +1,5 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
-import com.bookbookclub.bbc_user_service.global.exception.ErrorCode;
 import lombok.Getter;
 
 /**
@@ -9,10 +8,10 @@ import lombok.Getter;
  */
 @Getter
 public class DuplicateEmailException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final UserErrorCode errorCode;
 
     public DuplicateEmailException() {
-        super(ErrorCode.DUPLICATE_EMAIL.getMessage());
-        this.errorCode = ErrorCode.DUPLICATE_EMAIL;
+        super(UserErrorCode.EMAIL_DUPLICATED.getMessage());
+        this.errorCode = UserErrorCode.EMAIL_DUPLICATED;
     }
 }

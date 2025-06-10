@@ -3,10 +3,10 @@ package com.bookbookclub.bbc_user_service.follow.controller;
 
 import com.bookbookclub.bbc_user_service.follow.dto.FollowActionResponse;
 import com.bookbookclub.bbc_user_service.follow.dto.FollowResponse;
-import com.bookbookclub.bbc_user_service.follow.exception.AccessDeniedException;
+import com.bookbookclub.bbc_user_service.follow.exception.FollowAccessDeniedException;
 import com.bookbookclub.bbc_user_service.follow.service.FollowService;
-import com.bookbookclub.bbc_user_service.global.common.ApiResponse;
 import com.bookbookclub.bbc_user_service.global.security.CustomUserDetails;
+import com.bookbookclub.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -57,7 +57,7 @@ public class FollowController {
 
     private void validateUserAccess(CustomUserDetails userDetails, Long userId) {
         if (!userDetails.getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("본인 계정으로만 요청할 수 있습니다.");
+            throw new FollowAccessDeniedException("본인 계정으로만 요청할 수 있습니다.");
         }
     }
 }
