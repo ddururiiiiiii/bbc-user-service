@@ -1,9 +1,10 @@
 package com.bookbookclub.bbc_user_service.global.security.oauth.handler;
 
-import com.bookbookclub.bbc_user_service.global.common.TokenResponse;
+import com.bookbookclub.common.dto.TokenResponse;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtRefreshTokenService;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtUtil;
 import com.bookbookclub.bbc_user_service.global.security.CustomUserDetails;
+import com.bookbookclub.common.response.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
