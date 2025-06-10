@@ -13,7 +13,7 @@
 - **📁 MSA 버전**: [BookBookClub-MSA](https://github.com/ddururiiiiiii/BookBookClub-MSA)
 - **📄 도메인별 **:
 -   [bbc-user-service](https://github.com/ddururiiiiiii/bbc-user-service)
--   [bbc-post-service]([https://github.com/ddururiiiiiii/bbc-user-service](https://github.com/ddururiiiiiii/bbc-post-service))
+-   [bbc-post-service](https://github.com/ddururiiiiiii/bbc-post-service)
 
 
 <br>
