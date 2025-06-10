@@ -1,85 +1,81 @@
-# 👤 BookBookClub - User Service
+# 👤 bbc-user-service
 
-- **bbc-user-service**는 BookBookClub MSA 구조에서 **회원 관리 및 인증**을 담당하는 서비스입니다.
-- 회원가입, 로그인, 소셜 로그인 등 사용자의 인증 및 계정 정보를 처리합니다.
-
-<br>
-
-----
-
-<br>
-
-## 🚀 개요
-
-- **서비스명**: User Service
-- **역할**: 회원 관련 기능 (가입, 로그인, 소셜 로그인, 프로필 등)
-- **소속 프로젝트**: [BookBookClub-MSA](https://github.com/ddururiiiiiii/bookbookclub-msa)
-- **초기 깃허브**: [Monolith 프로젝트 보기](https://github.com/ddururiiiiiii/bookbookclub)
+> BookBookClub-MSA의 **회원 서비스**를 담당하는 마이크로서비스입니다.  
+> 회원가입, 로그인, 소셜 로그인, 프로필 조회 등의 기능을 제공합니다.
 
 <br>
 
 ----
 
-<br>
+## 📌 프로젝트 링크
 
-## ✨ 주요 기능
+- **🧱 모놀리식 버전**: [BookBookClub (Monolith)](https://github.com/ddururiiiiiii/bookbookclub)
+- **📁 MSA 버전**: [BookBookClub-MSA](https://github.com/ddururiiiiiii/BookBookClub-MSA)
+- **📄 도메인별 **:
+-   [bbc-user-service](https://github.com/ddururiiiiiii/bbc-user-service)
+-   [bbc-post-service]([https://github.com/ddururiiiiiii/bbc-user-service](https://github.com/ddururiiiiiii/bbc-post-service))
 
-| 기능                    | 설명                                                     | 상태      |
-|-----------------------|--------------------------------------------------------|----------|
-| 회원가입               | 이메일 회원가입 + 이메일 인증                            | ✅ 완료    |
-| 로그인                | 이메일 로그인 + JWT 발급                                 | ✅ 완료    |
-| 소셜 로그인 (OAuth2)   | Google, Naver 소셜 로그인                                | ✅ 완료    |
-| 닉네임 중복 체크         | 닉네임 중복 여부 조회 API                                | ✅ 완료    |
-| 이메일 중복 체크        | 이메일 중복 여부 조회 API                                | ✅ 완료    |
-| 프로필 조회/수정        | 회원 기본 정보 및 프로필 이미지 조회 및 수정               | 🟠 진행 중 |
-| 로그아웃               | JWT 로그아웃 처리 (Access 블랙리스트 + Refresh 토큰 제거) | 🟠 진행 중 |
-| 토큰 재발급            | Refresh Token으로 Access Token 재발급                    | ✅ 완료    |
 
 <br>
 
 ----
 
+## 📌 주요 기능
+
+### 🔐 인증/인가
+- JWT Access / Refresh Token 기반 인증
+- Refresh Token은 Redis에 저장 및 만료 관리
+- AccessToken 블랙리스트 관리 (로그아웃 등)
+
+### 📧 이메일 인증
+- 이메일 인증 토큰을 Redis에 저장
+- 최종 인증 여부는 MySQL에도 기록
+- 이메일 인증 실패 제한 기능 포함 (횟수 제한, 시간 제한)
+
+### 🧑‍💻 회원 관리
+- 회원가입 (일반, 소셜)
+- 닉네임 중복 검사
+- 마이페이지 조회 (닉네임, 프로필 등)
+- 프로필 이미지 업로드 (현재는 로컬 저장, 추후 S3 예정)
+- 회원 탈퇴 (상태값 변경 방식)
+
+  
+----
+
 <br>
 
-## 🏗️ 기술 스택
+## ✅ 완료된 구현
 
-- Java 17**
-- **Spring Boot 3.x**
-- **JPA + QueryDSL**
-- **MySQL**
-- **Spring Security + OAuth2**
-- **JWT (Access / Refresh Token)**
-- **Redis (토큰 관리, 인증 코드 관리)**
-- **Docker (도입 예정)**
-
-<br>
+- [x] 이메일 인증 API 및 토큰 만료 처리
+- [x] 소셜 로그인(Google, Naver) 연동
+- [x] JWT 기반 인증 필터 설정
+- [x] OAuth2 SuccessHandler 커스터마이징
+- [x] AccessToken/RefreshToken 발급 및 갱신
+- [x] 사용자 마이페이지 조회
+- [x] 프로필 이미지 업로드/삭제
 
 ----
 
 <br>
 
-## 🗂️ 프로젝트 구조
+## 📂 패키지 구조
 
-```bash
-📦bbc_user_service
- ┣ 📂global
- ┃ ┣ 📂common           # 공통 유틸리티, ApiResponse 등
- ┃ ┣ 📂config           # 전역 설정 (SecurityConfig 등)
- ┃ ┣ 📂exception        # 글로벌 예외 처리
- ┃ ┣ 📂jwt              # JWT 관련 (필터, 토큰 유틸)
- ┃ ┗ 📂security         # 보안 관련 설정 및 커스텀 시큐리티
- ┃
- ┣ 📂user
- ┃ ┣ 📂controller       # 사용자 관련 API 컨트롤러
- ┃ ┣ 📂domain           # User 엔티티
- ┃ ┣ 📂dto              # User 관련 DTO 클래스
- ┃ ┣ 📂enums            # 사용자 관련 Enum
- ┃ ┣ 📂exception        # 사용자 도메인 전용 예외 처리
- ┃ ┣ 📂policy           # 정책성 로직 (ex. 비밀번호 정책)
- ┃ ┣ 📂repository       # UserRepository 등 JPA 레포지토리
- ┃ ┣ 📂scheduler        # 배치/스케줄러 (ex. 만료 토큰 제거)
- ┃ ┗ 📂service          # 사용자 서비스 레이어
- ┃
- ┗ BbcUserServiceApplication  # 메인 실행 클래스
-```
+~~~bash
+com.bookbookclub.bbc_user_service
+├── auth # 인증/인가 관련 로직
+├── controller # API 컨트롤러
+├── dto # DTO
+├── global # 전역 설정 및 보안 필터
+├── user # 사용자 도메인
+└── utils # 유틸리티 (예: 이미지 처리 등)
+~~~
 
+
+----
+
+<br>
+
+## 💬 참고
+
+- 공통 에러코드 및 응답 포맷은 `bbc-common` 모듈에서 관리합니다.
+- 다른 서비스와의 통신은 FeignClient를 통해 처리합니다.
