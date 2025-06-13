@@ -80,9 +80,33 @@ public class User {
     private LocalDateTime withdrawnAt;
 
     /**
-     * 일반 회원 생성용 정적 메서드
+     * 닉네임 변경
+     * - 사용자 프로필에서 닉네임을 수정할 때 사용
      */
-    public static User create(String email, String encodedPassword, String nickname) {
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * 자기소개 변경
+     * - 사용자 프로필 소개(bio) 수정
+     */
+    public void updateBio(String bio) {
+        this.bio = bio;
+    }
+
+    /**
+     * 프로필 이미지 변경
+     * - 저장된 이미지 경로를 사용자 정보에 반영
+     */
+    public void updateProfileImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
+
+    /**
+     * 일반 회원 생성
+     */
+    public static User create(String email, String encodedPassword, String nickname, String profileImageUrl) {
         User user = new User();
         user.email = email;
         user.password = encodedPassword;
@@ -91,16 +115,20 @@ public class User {
         user.status = UserStatus.ACTIVE;
         user.provider = AuthProvider.LOCAL;
         user.providerId = "LOCAL";
+        user.profileImageUrl = profileImageUrl;
         return user;
     }
 
     /**
-     * 소셜 로그인 회원 생성용 정적 메서드
+     * 소셜 로그인 회원 생성
+     * - 비밀번호는 직접 입력하지 않으므로 의미 없는 문자열로 설정
+     * - provider, providerId를 통해 OAuth2 제공자 식별
+     * - 기본 권한(USER)과 활성 상태(ACTIVE)로 초기화됨
      */
     public static User createSocialUser(String email, String nickname, AuthProvider provider, String providerId) {
         User user = new User();
         user.email = email;
-        user.password = "oauth2"; // 의미 없는 값
+        user.password = "oauth2";
         user.nickname = nickname;
         user.role = Role.USER;
         user.status = UserStatus.ACTIVE;
@@ -110,7 +138,9 @@ public class User {
     }
 
     /**
-     * 사용자 탈퇴 처리 (상태 변경 및 탈퇴일 기록)
+     * 사용자 탈퇴 처리
+     * - 상태를 WITHDRAWN으로 변경
+     * - withdrawnAt에 현재 시간 기록
      */
     public void withdraw() {
         this.status = UserStatus.WITHDRAWN;

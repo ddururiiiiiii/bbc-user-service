@@ -21,11 +21,12 @@ public class EmailVerificationController {
 
     /**
      * 이메일 인증 메일 전송 API
+     * - 요청된 이메일 주소로 인증 링크 포함한 메일 발송
      */
     @PostMapping("/verify-request")
     public ResponseEntity<ApiResponse<Void>> requestEmailVerification(@RequestParam String email) {
         emailVerificationService.sendVerificationEmail(email);
-        return ResponseEntity.ok(ApiResponse.success(null, "이메일 인증 메일이 발송되었습니다."));
+        return ResponseEntity.ok(ApiResponse.success("인증 메일이 발송되었습니다."));
     }
 
     /**
@@ -34,11 +35,8 @@ public class EmailVerificationController {
      */
     @GetMapping("/verify")
     public ResponseEntity<ApiResponse<String>> verifyEmail(@RequestParam String token) {
-        boolean result = emailVerificationService.verifyEmail(token);
-        if (result) {
-            return ResponseEntity.ok(ApiResponse.success("이메일 인증이 완료되었습니다."));
-        } else {
-            return ResponseEntity.badRequest().body(ApiResponse.fail("유효하지 않거나 만료된 인증 링크입니다."));
-        }
+        emailVerificationService.verifyEmail(token);
+        return ResponseEntity.ok(ApiResponse.success("이메일 인증이 완료되었습니다."));
     }
+
 }

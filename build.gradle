@@ -66,6 +66,9 @@ dependencies {
 
 	//springdoc-openapi
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	implementation 'commons-io:commons-io:2.11.0'
 }
 
 // Q클래스가 생성될 위치 설정

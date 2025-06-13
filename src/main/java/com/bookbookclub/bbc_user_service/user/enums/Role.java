@@ -3,6 +3,9 @@ package com.bookbookclub.bbc_user_service.user.enums;
 
 import lombok.Getter;
 
+/**
+ * 사용자 권한 역할
+ */
 @Getter
 public enum Role {
 

@@ -2,6 +2,10 @@ package com.bookbookclub.bbc_user_service.user.enums;
 
 import lombok.Getter;
 
+
+/**
+ * OAuth2 인증 공급자 구분
+ */
 @Getter
 public enum AuthProvider {
     LOCAL("일반 가입"),
