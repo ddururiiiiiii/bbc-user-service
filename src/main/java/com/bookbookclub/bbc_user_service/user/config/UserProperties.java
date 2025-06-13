@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * 사용자 관련 커스텀 설정들을 관리하는 클래스
  *
- * application.yml 의 custom.user.* 값을 바인딩함
+ * application-user.yml 의 custom.user.* 값을 바인딩함
  */
 @Getter
 @Setter
