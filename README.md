@@ -47,13 +47,15 @@
 ## ✅ 완료된 구현
 
 - [x] 이메일 인증 API 및 토큰 만료 처리
-- [x] 소셜 로그인(Google, Naver) 연동
+- [x] 소셜 로그인(Google) 연동
 - [x] JWT 기반 인증 필터 설정
 - [x] OAuth2 SuccessHandler 커스터마이징
 - [x] AccessToken/RefreshToken 발급 및 갱신
 - [x] 사용자 마이페이지 조회
 - [x] 프로필 이미지 업로드/삭제
-
+- [x] 회원 탈퇴 기능 구현 및 토큰 무효화 처리 (refresh 삭제, access 블랙리스트 등록)
+- [x] 로그아웃 기능 구현 (access 블랙리스트 + refresh 제거)
+- [x] 탈퇴 후 재가입 제한 정책 적용
 ----
 
 <br>
