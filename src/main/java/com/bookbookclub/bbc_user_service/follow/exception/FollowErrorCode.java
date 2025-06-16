@@ -1,11 +1,15 @@
 package com.bookbookclub.bbc_user_service.follow.exception;
 
 import com.bookbookclub.common.exception.BaseErrorCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 /**
  * 팔로우 도메인 관련 에러 코드 정의
  */
+@Getter
+
 public enum FollowErrorCode implements BaseErrorCode {
 
     FOLLOW_NOT_FOUND(404, "F001", "팔로우 관계를 찾을 수 없습니다."),
@@ -22,18 +26,4 @@ public enum FollowErrorCode implements BaseErrorCode {
         this.message = message;
     }
 
-    @Override
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    @Override
-    public String getCode() {
-        return code;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
 }

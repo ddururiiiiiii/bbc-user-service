@@ -6,7 +6,7 @@ import com.bookbookclub.bbc_user_service.user.domain.User;
 import com.bookbookclub.bbc_user_service.user.dto.LoginRequest;
 import com.bookbookclub.bbc_user_service.user.dto.SignupRequest;
 import com.bookbookclub.bbc_user_service.user.dto.UserResponse;
-import com.bookbookclub.bbc_user_service.user.exception.AuthException;
+import com.bookbookclub.bbc_user_service.user.exception.UserException;
 import com.bookbookclub.bbc_user_service.user.exception.UserErrorCode;
 import com.bookbookclub.bbc_user_service.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,36 +65,36 @@ class AuthServiceTest {
 
     @Test
     void 회원가입_성공() {
-        when(emailVerificationService.isEmailVerified(signupRequest.getEmail())).thenReturn(true);
-        when(userRepository.existsByEmail(signupRequest.getEmail())).thenReturn(false);
-        when(userRepository.findByEmail(signupRequest.getEmail())).thenReturn(Optional.empty());
-        when(userRepository.existsByNickname(signupRequest.getNickname())).thenReturn(false);
-        when(passwordEncoder.encode(signupRequest.getPassword())).thenReturn("encodedPassword");
+        when(emailVerificationService.isEmailVerified(signupRequest.email())).thenReturn(true);
+        when(userRepository.existsByEmail(signupRequest.email())).thenReturn(false);
+        when(userRepository.findByEmail(signupRequest.email())).thenReturn(Optional.empty());
+        when(userRepository.existsByNickname(signupRequest.nickname())).thenReturn(false);
+        when(passwordEncoder.encode(signupRequest.password())).thenReturn("encodedPassword");
         when(userProperties.getDefaultProfileImageUrl()).thenReturn("default.png");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         UserResponse response = authService.signup(signupRequest);
 
-        assertEquals("nickname", response.getNickname());
+        assertEquals("nickname", response.nickname());
     }
 
     @Test
     void 로그인_성공() {
-        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(activeUser));
-        when(passwordEncoder.matches(loginRequest.getPassword(), activeUser.getPassword())).thenReturn(true);
+        when(userRepository.findByEmail(loginRequest.email())).thenReturn(Optional.of(activeUser));
+        when(passwordEncoder.matches(loginRequest.password(), activeUser.getPassword())).thenReturn(true);
 
         UserResponse response = authService.login(loginRequest);
 
-        assertEquals("nickname", response.getNickname());
+        assertEquals("nickname", response.nickname());
     }
 
     @Test
     void 로그인_실패_비밀번호_불일치() {
-        when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(activeUser));
+        when(userRepository.findByEmail(loginRequest.email())).thenReturn(Optional.of(activeUser));
         when(passwordEncoder.matches("wrongPassword", activeUser.getPassword())).thenReturn(false);
 
-        assertThrows(AuthException.class, () ->
-                authService.login(new LoginRequest(loginRequest.getEmail(), "wrongPassword"))
+        assertThrows(UserException.class, () ->
+                authService.login(new LoginRequest(loginRequest.email(), "wrongPassword"))
         );
     }
 
@@ -124,7 +124,7 @@ class AuthServiceTest {
 
         // when & then
         assertThatThrownBy(() -> authService.withdrawUser(userId))
-                .isInstanceOf(AuthException.class)
+                .isInstanceOf(UserException.class)
                 .hasMessage(UserErrorCode.USER_NOT_FOUND.getMessage());
 
         verify(userRepository).findById(userId);

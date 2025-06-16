@@ -1,17 +1,22 @@
 package com.bookbookclub.bbc_user_service.global.security.oauth.userinfo;
 
 
-import com.bookbookclub.bbc_user_service.global.security.CustomUserDetails;
 import com.bookbookclub.bbc_user_service.user.domain.User;
 import com.bookbookclub.bbc_user_service.user.enums.AuthProvider;
 import com.bookbookclub.bbc_user_service.user.repository.UserRepository;
+import com.bookbookclub.common.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * 구글 OAuth2 사용자 정보 처리 서비스
@@ -35,15 +40,31 @@ public class GoogleOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         AuthProvider provider = AuthProvider.GOOGLE;
 
         return userRepository.findByEmail(email)
-                .map(CustomUserDetails::new)
+                .map(user -> new DefaultOAuth2User(
+                        Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())),
+                        Map.of(
+                                "id", user.getId(),
+                                "email", user.getEmail(),
+                                "nickname", user.getNickname()
+                        ),
+                        "email" // 👈 여기서 식별자 키 지정 (Principal로 쓸 key)
+                ))
                 .orElseGet(() -> {
-                    // 닉네임 중복 검사
                     if (userRepository.existsByNickname(name)) {
                         throw new OAuth2AuthenticationException("이미 사용 중인 닉네임입니다.");
                     }
 
                     User newUser = userRepository.save(User.createSocialUser(email, name, provider, providerId));
-                    return new CustomUserDetails(newUser);
+
+                    return new DefaultOAuth2User(
+                            Collections.singleton(new SimpleGrantedAuthority("ROLE_" + newUser.getRole().name())),
+                            Map.of(
+                                    "id", newUser.getId(),
+                                    "email", newUser.getEmail(),
+                                    "nickname", newUser.getNickname()
+                            ),
+                            "email"
+                    );
                 });
     }
 }

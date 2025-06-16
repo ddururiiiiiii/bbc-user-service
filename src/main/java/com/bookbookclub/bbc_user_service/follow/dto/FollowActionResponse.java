@@ -1,12 +1,18 @@
 package com.bookbookclub.bbc_user_service.follow.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+/**
+ * 팔로우/언팔로우 요청 후 응답 DTO
+ */
+public record FollowActionResponse(
 
-@Getter
-@AllArgsConstructor
-public class FollowActionResponse {
-    private Long followId;       // 팔로우 관계 ID
-    private String message;      // 응답 메시지 ("팔로우 완료", "언팔로우 완료")
-    private Long followerCount;  // 현재 대상의 팔로워 수 (선택)
+        /** 팔로우 대상 유저 ID */
+        Long targetUserId,
+
+        /** 현재 로그인 유저가 해당 유저를 팔로우 중인지 여부 */
+        boolean isFollowing
+
+) {
+    public static FollowActionResponse from(Long targetUserId, boolean isFollowing) {
+        return new FollowActionResponse(targetUserId, isFollowing);
+    }
 }

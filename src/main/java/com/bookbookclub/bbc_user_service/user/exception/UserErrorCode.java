@@ -1,7 +1,9 @@
 package com.bookbookclub.bbc_user_service.user.exception;
 
+import com.bookbookclub.bbc_user_service.follow.exception.FollowErrorCode;
 import com.bookbookclub.common.exception.BaseErrorCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -49,18 +51,5 @@ public enum UserErrorCode implements BaseErrorCode {
         this.message = message;
     }
 
-    @Override
-    public int getStatusCode() {
-        return statusCode;
-    }
 
-    @Override
-    public String getCode() {
-        return code;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
 }

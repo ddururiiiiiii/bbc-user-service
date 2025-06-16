@@ -3,8 +3,8 @@ package com.bookbookclub.bbc_user_service.global.security.oauth.handler;
 import com.bookbookclub.common.dto.TokenResponse;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtRefreshTokenService;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtUtil;
-import com.bookbookclub.bbc_user_service.global.security.CustomUserDetails;
 import com.bookbookclub.common.response.ApiResponse;
+import com.bookbookclub.common.security.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         // JWT 발급
         String accessToken = jwtUtil.createToken(
-                userDetails.getId(),
+                userDetails.getUserId(),
                 userDetails.getEmail(),
                 userDetails.getNickname(),
                 userDetails.getProfileImageUrl(),
@@ -49,7 +49,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken = jwtUtil.createRefreshToken();
 
         // Redis 저장
-        refreshTokenService.save(userDetails.getId(), refreshToken, REFRESH_EXPIRATION_DAYS, TimeUnit.DAYS);
+        refreshTokenService.save(userDetails.getUserId(), refreshToken, REFRESH_EXPIRATION_DAYS, TimeUnit.DAYS);
 
         // 응답
         response.setContentType("application/json;charset=UTF-8");

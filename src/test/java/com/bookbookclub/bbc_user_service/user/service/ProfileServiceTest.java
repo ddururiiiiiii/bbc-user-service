@@ -50,7 +50,7 @@ class ProfileServiceTest {
 
         UserResponse result = profileService.getMyProfile(1L);
 
-        assertEquals("oldNickname", result.getNickname());
+        assertEquals("oldNickname", result.nickname());
     }
 
     @Test
@@ -62,7 +62,7 @@ class ProfileServiceTest {
 
         UserResponse result = profileService.updateProfile(1L, request);
 
-        assertEquals("newNick", result.getNickname());
+        assertEquals("newNick", result.nickname());
     }
 
     @Test

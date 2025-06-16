@@ -3,7 +3,7 @@ package com.bookbookclub.bbc_user_service.user.service;
 import com.bookbookclub.bbc_user_service.user.domain.User;
 import com.bookbookclub.bbc_user_service.user.dto.ProfileUpdateRequest;
 import com.bookbookclub.bbc_user_service.user.dto.UserResponse;
-import com.bookbookclub.bbc_user_service.user.exception.AuthException;
+import com.bookbookclub.bbc_user_service.user.exception.UserException;
 import com.bookbookclub.bbc_user_service.user.exception.UserErrorCode;
 import com.bookbookclub.bbc_user_service.user.repository.UserRepository;;
 import lombok.RequiredArgsConstructor;
@@ -61,10 +61,10 @@ public class ProfileService {
     // 닉네임 변경
     private void updateNickname(User user, String nickname) {
         if (containsBannedWord(nickname)) {
-            throw new AuthException(UserErrorCode.BANNED_WORD_DETECTED);
+            throw new UserException(UserErrorCode.BANNED_WORD_DETECTED);
         }
         if (userRepository.existsByNickname(nickname)) {
-            throw new AuthException(UserErrorCode.DUPLICATE_NICKNAME);
+            throw new UserException(UserErrorCode.DUPLICATE_NICKNAME);
         }
         user.updateNickname(nickname);
     }
@@ -72,7 +72,7 @@ public class ProfileService {
     // 자기소개 변경
     private void updateBio(User user, String bio) {
         if (containsBannedWord(bio)) {
-            throw new AuthException(UserErrorCode.BANNED_WORD_DETECTED);
+            throw new UserException(UserErrorCode.BANNED_WORD_DETECTED);
         }
         user.updateBio(bio);
     }
@@ -104,6 +104,6 @@ public class ProfileService {
     // 유저 조회 공통 처리
     private User getUser(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new AuthException(UserErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
     }
 }

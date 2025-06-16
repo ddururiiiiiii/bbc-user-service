@@ -1,7 +1,7 @@
 package com.bookbookclub.bbc_user_service.user.service;
 
 import com.bookbookclub.bbc_user_service.user.config.UserProperties;
-import com.bookbookclub.bbc_user_service.user.exception.AuthException;
+import com.bookbookclub.bbc_user_service.user.exception.UserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +43,7 @@ class ProfileImageServiceTest {
 
         when(userProperties.getMaxProfileImageSize()).thenReturn(2_000_000L);
 
-        assertThrows(AuthException.class, () -> profileImageService.store(bigFile));
+        assertThrows(UserException.class, () -> profileImageService.store(bigFile));
     }
 
     @Test
@@ -72,7 +72,7 @@ class ProfileImageServiceTest {
     void 잘못된_확장자일_때_예외() {
         MultipartFile badFile = new MockMultipartFile("file", "x.exe", "application/octet-stream", new byte[100]);
 
-        assertThrows(AuthException.class, () -> profileImageService.store(badFile));
+        assertThrows(UserException.class, () -> profileImageService.store(badFile));
     }
 
     @Test

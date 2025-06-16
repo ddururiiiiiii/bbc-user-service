@@ -1,7 +1,7 @@
 package com.bookbookclub.bbc_user_service.user.service;
 
 import com.bookbookclub.bbc_user_service.user.config.UserProperties;
-import com.bookbookclub.bbc_user_service.user.exception.AuthException;
+import com.bookbookclub.bbc_user_service.user.exception.UserException;
 import com.bookbookclub.bbc_user_service.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class ProfileImageService {
             createDirectoryIfNotExists(dirPath);
             saveFile(file, filePath);
         } catch (IOException e) {
-            throw new AuthException(UserErrorCode.PROFILE_IMAGE_UPLOAD_FAIL);
+            throw new UserException(UserErrorCode.PROFILE_IMAGE_UPLOAD_FAIL);
         }
 
         return userProperties.getProfileImageUrlPrefix() + filename;
@@ -66,7 +66,7 @@ public class ProfileImageService {
         if (file.exists()) {
             if (!file.delete()) {
                 log.warn("프로필 이미지 삭제 실패: {}", file.getAbsolutePath());
-                throw new AuthException(UserErrorCode.PROFILE_IMAGE_DELETE_FAIL);
+                throw new UserException(UserErrorCode.PROFILE_IMAGE_DELETE_FAIL);
             }
         }
     }
@@ -89,17 +89,17 @@ public class ProfileImageService {
     private void validateImage(MultipartFile file) {
         // 최대 용량 초과 검사
         if (file.getSize() > userProperties.getMaxProfileImageSize()) {
-            throw new AuthException(UserErrorCode.PROFILE_IMAGE_TOO_LARGE);
+            throw new UserException(UserErrorCode.PROFILE_IMAGE_TOO_LARGE);
         }
 
         try (InputStream input = file.getInputStream()) {
             // 확장자 화이트리스트 검사
             String ext = FilenameUtils.getExtension(file.getOriginalFilename()).toLowerCase();
             if (!ALLOWED_EXTENSIONS.contains(ext)) {
-                throw new AuthException(UserErrorCode.INVALID_PROFILE_IMAGE_TYPE);
+                throw new UserException(UserErrorCode.INVALID_PROFILE_IMAGE_TYPE);
             }
         } catch (IOException e) {
-            throw new AuthException(UserErrorCode.INVALID_PROFILE_IMAGE_TYPE);
+            throw new UserException(UserErrorCode.INVALID_PROFILE_IMAGE_TYPE);
         }
     }
 
@@ -135,10 +135,10 @@ public class ProfileImageService {
     private String extractFilename(String imageUrl) {
         int idx = imageUrl.lastIndexOf("/");
         if (idx == -1 || idx == imageUrl.length() - 1) {
-            throw new AuthException(UserErrorCode.INVALID_PROFILE_IMAGE_URL);
+            throw new UserException(UserErrorCode.INVALID_PROFILE_IMAGE_URL);
         }
         if (!imageUrl.startsWith(userProperties.getProfileImageUrlPrefix())) {
-            throw new AuthException(UserErrorCode.INVALID_PROFILE_IMAGE_URL);
+            throw new UserException(UserErrorCode.INVALID_PROFILE_IMAGE_URL);
         }
         return imageUrl.substring(idx + 1);
 

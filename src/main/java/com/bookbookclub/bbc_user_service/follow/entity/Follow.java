@@ -1,44 +1,39 @@
 package com.bookbookclub.bbc_user_service.follow.entity;
 
-import com.bookbookclub.bbc_user_service.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-
-@Entity
+/**
+ * 사용자 간 팔로우 관계를 나타내는 엔티티
+ */
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-@AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "following_id"}))
 public class Follow {
 
+    /** 팔로우 고유 ID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_id", nullable = false)
-    private User follower;
+    /** 팔로우를 거는 사용자 ID (팔로워) */
+    @Column(nullable = false)
+    private Long followerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id", nullable = false)
-    private User following;
+    /** 팔로우 대상 사용자 ID (팔로잉) */
+    @Column(nullable = false)
+    private Long followingId;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    public static Follow create(User follower, User following) {
+    /**
+     * Follow 엔티티 생성 정적 팩토리 메서드
+     */
+    public static Follow of(Long followerId, Long followingId) {
         Follow follow = new Follow();
-        follow.follower = follower;
-        follow.following = following;
+        follow.followerId = followerId;
+        follow.followingId = followingId;
         return follow;
     }
 }
+

@@ -1,10 +1,10 @@
 package com.bookbookclub.bbc_user_service.user.controller;
 
-import com.bookbookclub.bbc_user_service.global.security.CustomUserDetails;
 import com.bookbookclub.bbc_user_service.user.dto.ProfileUpdateRequest;
 import com.bookbookclub.bbc_user_service.user.dto.UserResponse;
 import com.bookbookclub.bbc_user_service.user.service.ProfileService;
 import com.bookbookclub.common.response.ApiResponse;
+import com.bookbookclub.common.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +28,7 @@ public class ProfileController {
      */
     @GetMapping("/me")
     public ApiResponse<UserResponse> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse response = profileService.getMyProfile(userDetails.getUser().getId());
+        UserResponse response = profileService.getMyProfile(userDetails.getUserId());
         return ApiResponse.success(response);
     }
 
@@ -39,6 +39,6 @@ public class ProfileController {
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
                                            @Valid @ModelAttribute ProfileUpdateRequest request) {
-        return ResponseEntity.ok(ApiResponse.success(profileService.updateProfile(userDetails.getUser().getId(), request)));
+        return ResponseEntity.ok(ApiResponse.success(profileService.updateProfile(userDetails.getUserId(), request)));
     }
 }

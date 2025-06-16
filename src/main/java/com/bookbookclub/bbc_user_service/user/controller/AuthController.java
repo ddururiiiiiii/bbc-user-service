@@ -3,13 +3,13 @@ package com.bookbookclub.bbc_user_service.user.controller;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtBlacklistService;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtRefreshTokenService;
 import com.bookbookclub.bbc_user_service.global.jwt.JwtUtil;
-import com.bookbookclub.bbc_user_service.global.security.CustomUserDetails;
 import com.bookbookclub.bbc_user_service.user.domain.User;
 import com.bookbookclub.bbc_user_service.user.dto.*;
-import com.bookbookclub.bbc_user_service.user.exception.AuthException;
+import com.bookbookclub.bbc_user_service.user.exception.UserException;
 import com.bookbookclub.bbc_user_service.user.exception.UserErrorCode;
 import com.bookbookclub.bbc_user_service.user.service.AuthService;
 import com.bookbookclub.common.response.ApiResponse;
+import com.bookbookclub.common.security.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -71,10 +71,10 @@ public class AuthController {
         UserResponse user = authService.login(request);
 
         String accessToken = jwtUtil.createToken(
-                user.getId(), user.getEmail(), user.getNickname(), user.getProfileImageUrl(), user.getRole()
+                user.id(), user.email(), user.nickname(), user.profileImageUrl(), user.role()
         );
         String refreshToken = jwtUtil.createRefreshToken();
-        refreshTokenService.save(user.getId(), refreshToken, REFRESH_EXPIRATION_DAYS, TimeUnit.DAYS);
+        refreshTokenService.save(user.id(), refreshToken, REFRESH_EXPIRATION_DAYS, TimeUnit.DAYS);
 
         return ResponseEntity.ok(ApiResponse.success(new LoginResponse(accessToken, refreshToken, user)));
     }
@@ -84,12 +84,12 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<LoginResponse>> refresh(@RequestBody RefreshTokenRequest request) {
-        if (!refreshTokenService.isValid(request.getUserId(), request.getRefreshToken())) {
-            log.warn("Refresh token invalid: userId={}, token={}", request.getUserId(), request.getRefreshToken());
-            throw new AuthException(UserErrorCode.INVALID_TOKEN);
+        if (!refreshTokenService.isValid(request.userId(), request.refreshToken())) {
+            log.warn("Refresh token invalid: userId={}, token={}", request.userId(), request.refreshToken());
+            throw new UserException(UserErrorCode.INVALID_TOKEN);
         }
 
-        User user = authService.findById(request.getUserId());
+        User user = authService.findById(request.userId());
 
         String newAccessToken = jwtUtil.createToken(
                 user.getId(), user.getEmail(), user.getNickname(), user.getProfileImageUrl(), user.getRole().name()
@@ -106,7 +106,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     HttpServletRequest request) {
-        refreshTokenService.delete(userDetails.getId());
+        refreshTokenService.delete(userDetails.getUserId());
 
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
@@ -123,7 +123,7 @@ public class AuthController {
      */
     @DeleteMapping("/withdraw")
     public ApiResponse<Void> withdraw(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        authService.withdrawUser(userDetails.getUser().getId());
+        authService.withdrawUser(userDetails.getUserId());
         return ApiResponse.success("회원 탈퇴가 완료되었습니다.");
     }
 

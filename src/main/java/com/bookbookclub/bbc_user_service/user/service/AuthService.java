@@ -51,20 +51,20 @@ public class AuthService {
     @Transactional
     public UserResponse signup(SignupRequest request) {
 
-        validateEmailVerification(request.getEmail());
-        validateDuplicateEmail(request.getEmail());
-        validateRejoinAvailable(request.getEmail());
-        validateEmailFormat(request.getEmail());;
+        validateEmailVerification(request.email());
+        validateDuplicateEmail(request.email());
+        validateRejoinAvailable(request.email());
+        validateEmailFormat(request.email());;
 
-        validateNicknameFormat(request.getNickname());
-        validateDuplicateNickname(request.getNickname());
+        validateNicknameFormat(request.nickname());
+        validateDuplicateNickname(request.nickname());
 
-        validatePasswordFormat(request.getPassword());
+        validatePasswordFormat(request.password());
 
         User user = User.create(
-                request.getEmail(),
-                passwordEncoder.encode(request.getPassword()),
-                request.getNickname(),
+                request.email(),
+                passwordEncoder.encode(request.password()),
+                request.nickname(),
                 userProperties.getDefaultProfileImageUrl()
         );
         userRepository.save(user);
@@ -77,7 +77,7 @@ public class AuthService {
      * - 비밀번호 확인
      */
     public UserResponse login(LoginRequest request) {
-        User user = validateUserLogin(request.getEmail(), request.getPassword());
+        User user = validateUserLogin(request.email(), request.password());
         return UserResponse.from(user);
     }
 
@@ -87,7 +87,7 @@ public class AuthService {
     @Transactional
     public void withdrawUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AuthException(UserErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         user.withdraw(); // → status, withdrawnAt 변경
         redisTemplate.delete("refreshToken:" + userId);
@@ -108,7 +108,7 @@ public class AuthService {
      */
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new AuthException(UserErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
     }
 
     // 이메일 인증 여부 검증
@@ -121,7 +121,7 @@ public class AuthService {
     //이메일 중복 확인
     private void validateDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new AuthException(UserErrorCode.DUPLICATE_EMAIL);
+            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
     }
 
@@ -131,10 +131,10 @@ public class AuthService {
             if (user.getStatus() == UserStatus.WITHDRAWN) {
                 LocalDateTime rejoinAvailableDate = user.getWithdrawnAt().plusMonths(UserPolicy.REJOIN_RESTRICTION_MONTHS);
                 if (LocalDateTime.now().isBefore(rejoinAvailableDate)) {
-                    throw new AuthException(UserErrorCode.REJOIN_RESTRICTED);
+                    throw new UserException(UserErrorCode.REJOIN_RESTRICTED);
                 }
             } else {
-                throw new AuthException(UserErrorCode.DUPLICATE_EMAIL);
+                throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
             }
         });
     }
@@ -142,45 +142,45 @@ public class AuthService {
     // 이메일 형식 검증
     private void validateEmailFormat(String email) {
         if (!Pattern.matches(EMAIL_REGEX, email)) {
-            throw new AuthException(UserErrorCode.INVALID_EMAIL_FORMAT);
+            throw new UserException(UserErrorCode.INVALID_EMAIL_FORMAT);
         }
     }
 
     // 닉네임 형식 검증 (한글, 영문, 숫자 / 2~12자 / 공백 금지 / 금칙어 )
     private void validateNicknameFormat(String nickname) {
         if (!StringUtils.isNotBlank(nickname)) {
-            throw new AuthException(UserErrorCode.INVALID_NICKNAME_FORMAT);
+            throw new UserException(UserErrorCode.INVALID_NICKNAME_FORMAT);
         }
 
         if (nickname.contains(" ")) {
-            throw new AuthException(UserErrorCode.INVALID_NICKNAME_FORMAT);
+            throw new UserException(UserErrorCode.INVALID_NICKNAME_FORMAT);
         }
 
         if (!nickname.matches(NICKNAME_REGEX)) {
-            throw new AuthException(UserErrorCode.INVALID_NICKNAME_FORMAT);
+            throw new UserException(UserErrorCode.INVALID_NICKNAME_FORMAT);
         }
 
         if (containsBannedWord(nickname)) {
-            throw new AuthException(UserErrorCode.BANNED_WORD_DETECTED);
+            throw new UserException(UserErrorCode.BANNED_WORD_DETECTED);
         }
     }
 
     //닉네임 중복 확인
     private void validateDuplicateNickname(String nickname) {
         if (userRepository.existsByNickname(nickname)) {
-            throw new AuthException(UserErrorCode.DUPLICATE_NICKNAME);
+            throw new UserException(UserErrorCode.DUPLICATE_NICKNAME);
         }
     }
 
     // 비밀번호 형식 검증 (8~20자 / 영문 + 숫자 + 특수문자 / 연속 또는 반복 문자 금지)
     private void validatePasswordFormat(String password) {
         if (!password.matches(PASSWORD_REGEX)) {
-            throw new AuthException(UserErrorCode.INVALID_PASSWORD_FORMAT);
+            throw new UserException(UserErrorCode.INVALID_PASSWORD_FORMAT);
         }
 
         // 연속 문자 (ex: abc, 123) 혹은 반복 문자 (ex: aaaa)
         if (hasSequentialChars(password) || hasRepeatedChars(password)) {
-            throw new AuthException(UserErrorCode.TOO_SIMPLE_PASSWORD);
+            throw new UserException(UserErrorCode.TOO_SIMPLE_PASSWORD);
         }
     }
 
@@ -211,14 +211,14 @@ public class AuthService {
     //비밀번호 확인
     private User validateUserLogin(String email, String rawPassword) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AuthException(UserErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         if (user.getStatus() == UserStatus.WITHDRAWN) {
-            throw new AuthException(UserErrorCode.USER_WITHDRAWN);
+            throw new UserException(UserErrorCode.USER_WITHDRAWN);
         }
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new AuthException(UserErrorCode.INVALID_PASSWORD);
+            throw new UserException(UserErrorCode.INVALID_PASSWORD);
         }
         return user;
     }

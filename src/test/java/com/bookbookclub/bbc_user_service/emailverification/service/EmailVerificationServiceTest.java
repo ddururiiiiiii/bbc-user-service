@@ -31,8 +31,8 @@ class EmailVerificationServiceTest {
     @BeforeEach
     void setUp() {
         redisTemplate = mock(RedisTemplate.class);
-        valueOperations = mock(ValueOperations.class); // ⭐ 추가
-        given(redisTemplate.opsForValue()).willReturn(valueOperations); // ⭐ 추가
+        valueOperations = mock(ValueOperations.class);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
 
         mailSender = mock(JavaMailSender.class);
         repository = mock(EmailVerificationRepository.class);
