@@ -1,5 +1,6 @@
 package com.bookbookclub.bbc_user_service.follow.service;
 
+import com.bookbookclub.bbc_user_service.global.kafka.FollowEventProducer;
 import com.bookbookclub.bbc_user_service.follow.dto.FollowActionResponse;
 import com.bookbookclub.bbc_user_service.follow.entity.Follow;
 import com.bookbookclub.bbc_user_service.follow.exception.FollowErrorCode;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class FollowCommandService {
 
     private final FollowRepository followRepository;
+    private final FollowEventProducer followEventProducer;
+
 
     /**
      * 팔로우 요청
@@ -32,8 +35,12 @@ public class FollowCommandService {
         Follow follow = Follow.of(followerId, followingId);
         followRepository.save(follow);
 
+        // ✅ Kafka 팔로우 이벤트 발행
+        followEventProducer.sendFollowCreated(followerId, followingId);
+
         return new FollowActionResponse(followingId, true);
     }
+
 
     /**
      * 언팔로우 요청

@@ -69,6 +69,12 @@ dependencies {
 
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 	implementation 'commons-io:commons-io:2.11.0'
+
+	// Kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+
+// JSON 직렬화
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 // Q클래스가 생성될 위치 설정
