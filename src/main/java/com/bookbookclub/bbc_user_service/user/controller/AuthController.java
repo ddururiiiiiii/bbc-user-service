@@ -70,9 +70,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
         UserResponse user = authService.login(request);
 
-        String accessToken = jwtUtil.createToken(
-                user.id(), user.email(), user.nickname(), user.profileImageUrl(), user.role()
-        );
+        String accessToken = jwtUtil.createToken(user.id());
         String refreshToken = jwtUtil.createRefreshToken();
         refreshTokenService.save(user.id(), refreshToken, REFRESH_EXPIRATION_DAYS, TimeUnit.DAYS);
 
@@ -91,9 +89,7 @@ public class AuthController {
 
         User user = authService.findById(request.userId());
 
-        String newAccessToken = jwtUtil.createToken(
-                user.getId(), user.getEmail(), user.getNickname(), user.getProfileImageUrl(), user.getRole().name()
-        );
+        String newAccessToken = jwtUtil.createToken(user.getId());
         String newRefreshToken = jwtUtil.createRefreshToken();
         refreshTokenService.save(user.getId(), newRefreshToken, REFRESH_EXPIRATION_DAYS, TimeUnit.DAYS);
 

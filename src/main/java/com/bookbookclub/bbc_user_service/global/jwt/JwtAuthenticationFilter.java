@@ -68,13 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // 인증 객체 생성 및 등록
-        CustomUserDetails customUserDetails = new CustomUserDetails(
-                user.getId(),
-                user.getEmail(),
-                user.getNickname(),
-                user.getProfileImageUrl(),
-                user.getRole().name()
-        );
+        CustomUserDetails customUserDetails = new CustomUserDetails(user.getId());
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -6,6 +6,7 @@ import com.bookbookclub.bbc_user_service.user.dto.UserResponse;
 import com.bookbookclub.bbc_user_service.user.exception.UserException;
 import com.bookbookclub.bbc_user_service.user.exception.UserErrorCode;
 import com.bookbookclub.bbc_user_service.user.repository.UserRepository;;
+import com.bookbookclub.common.dto.UserSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +57,14 @@ public class ProfileService {
         handleProfileImageUpdate(user, request);
 
         return UserResponse.from(user);
+    }
+
+    /**
+     * FeignClient에서 사용할 유저 요약 정보 조회
+     */
+    public UserSummaryResponse getUserProfile(Long userId) {
+        User user = getUser(userId);
+        return new UserSummaryResponse(user.getId(), user.getNickname(), user.getProfileImageUrl());
     }
 
     // 닉네임 변경

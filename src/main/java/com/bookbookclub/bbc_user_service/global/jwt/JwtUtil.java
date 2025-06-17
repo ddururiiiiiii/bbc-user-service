@@ -30,14 +30,10 @@ public class JwtUtil {
     /**
      * JWT 생성 (AccessToken)
      */
-    public String createToken(Long id, String email, String nickname, String profileImageUrl, String role) {
+    public String createToken(Long userId) {
         return Jwts.builder()
-                .setSubject(email)
-                .claim("id", id)
-                .claim("email", email)
-                .claim("nickname", nickname)
-                .claim("profileImageUrl", profileImageUrl)
-                .claim("role", role)
+                .setSubject(userId.toString())
+                .claim("userId", userId) // 또는 claim 생략하고 subject만 써도 무방
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(key, SignatureAlgorithm.HS256)
