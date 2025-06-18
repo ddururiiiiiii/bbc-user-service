@@ -22,18 +22,18 @@ public class FollowCommandController {
     /** 팔로우 요청 */
     @PostMapping("/{targetUserId}")
     public ApiResponse<FollowActionResponse> follow(
-            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestHeader("X-USER-ID") Long userId,
             @PathVariable Long targetUserId
     ) {
-        return ApiResponse.success(followCommandService.follow(user.getUserId(), targetUserId));
+        return ApiResponse.success(followCommandService.follow(userId, targetUserId));
     }
 
     /** 언팔로우 요청 */
     @DeleteMapping("/{targetUserId}")
     public ApiResponse<FollowActionResponse> unfollow(
-            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestHeader("X-USER-ID") Long userId,
             @PathVariable Long targetUserId
     ) {
-        return ApiResponse.success(followCommandService.unfollow(user.getUserId(), targetUserId));
+        return ApiResponse.success(followCommandService.unfollow(userId, targetUserId));
     }
 }

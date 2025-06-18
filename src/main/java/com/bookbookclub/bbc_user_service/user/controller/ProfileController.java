@@ -27,8 +27,8 @@ public class ProfileController {
      * 내 프로필 조회 API
      */
     @GetMapping("/me")
-    public ApiResponse<UserResponse> getMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse response = profileService.getMyProfile(userDetails.getUserId());
+    public ApiResponse<UserResponse> getMyProfile(@RequestHeader("X-USER-ID") Long userId) {
+        UserResponse response = profileService.getMyProfile(userId);
         return ApiResponse.success(response);
     }
 
@@ -37,8 +37,8 @@ public class ProfileController {
      * - 닉네임, 자기소개, 프로필 이미지 수정 및 삭제
      */
     @PutMapping("/me")
-    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(@RequestHeader("X-USER-ID") Long userId,
                                            @Valid @ModelAttribute ProfileUpdateRequest request) {
-        return ResponseEntity.ok(ApiResponse.success(profileService.updateProfile(userDetails.getUserId(), request)));
+        return ResponseEntity.ok(ApiResponse.success(profileService.updateProfile(userId, request)));
     }
 }

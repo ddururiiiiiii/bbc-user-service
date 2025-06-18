@@ -19,10 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * JWT 기반 인증 필터
- * - 매 요청마다 JWT 유효성 검사 및 사용자 인증 처리
- * - 블랙리스트 체크 포함
- * - 인증 실패 시 401 Unauthorized 응답 반환
+ * JWT 인증 필터
+ * - 요청 헤더에서 토큰 추출
+ * - 유효한 토큰일 경우 SecurityContext에 인증 정보 설정
+ * - Spring Security 필터 체인에 등록되어 인증 처리 담당
  */
 @Component
 @RequiredArgsConstructor

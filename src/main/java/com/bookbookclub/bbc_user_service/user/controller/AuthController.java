@@ -100,9 +100,9 @@ public class AuthController {
      * 로그아웃 - RefreshToken 제거 및 AccessToken 블랙리스트 등록
      */
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<ApiResponse<Void>> logout(@RequestHeader("X-USER-ID") Long userId,
                                                     HttpServletRequest request) {
-        refreshTokenService.delete(userDetails.getUserId());
+        refreshTokenService.delete(userId);
 
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
@@ -118,8 +118,8 @@ public class AuthController {
      * 회원탈퇴
      */
     @DeleteMapping("/withdraw")
-    public ApiResponse<Void> withdraw(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        authService.withdrawUser(userDetails.getUserId());
+    public ApiResponse<Void> withdraw(@RequestHeader("X-USER-ID") Long userId) {
+        authService.withdrawUser(userId);
         return ApiResponse.success("회원 탈퇴가 완료되었습니다.");
     }
 

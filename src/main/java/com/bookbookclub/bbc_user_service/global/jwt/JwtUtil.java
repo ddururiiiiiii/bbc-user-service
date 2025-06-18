@@ -5,10 +5,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -18,22 +20,24 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final long EXPIRATION_MS = 1000 * 60 * 60 * 24; // 1일
-    private static final String SECRET_KEY = "mybookbooksecretkeymybookbooksecretkey"; // 32바이트 이상
+
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     private Key key;
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        byte[] keyBytes = Base64.getDecoder().decode(secretKey); // Base64 디코딩 후 키 생성
+        this.key = Keys.hmacShaKeyFor(keyBytes);
     }
-
     /**
      * JWT 생성 (AccessToken)
      */
     public String createToken(Long userId) {
         return Jwts.builder()
                 .setSubject(userId.toString())
-                .claim("userId", userId) // 또는 claim 생략하고 subject만 써도 무방
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(key, SignatureAlgorithm.HS256)

@@ -16,10 +16,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * Spring Security 설정 클래스
- * - JWT 인증 필터
- * - OAuth2 로그인 설정
- * - 인가 정책 설정
+ * Spring Security 설정 (user-service)
+ * - 로그인, 회원정보 요청 등 인증 필요한 API 보호
+ * - JwtAuthenticationFilter를 통해 JWT 인증 처리
+ * - 세션 없이 동작하도록 설정 (STATELESS)
  */
 @Configuration
 @RequiredArgsConstructor
